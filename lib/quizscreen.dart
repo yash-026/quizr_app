@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names
 
 import 'dart:math';
 
@@ -17,12 +17,29 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   List<Question> questionList = getQuestions();
-  int currentQuestionIndex = Random().nextInt(10);
+  List<int> numbers = List.generate(10, (index) => index);
+  int currentQuestionIndex = 0;
   int counter = 1;
   int score = 0;
   int correctAnswers = 0;
   int bestScore = 0;
   Answer? selectedAnswer;
+
+  randomPicker() {
+    currentQuestionIndex = pickRandomNumber();
+  }
+
+  int pickRandomNumber() {
+    if (numbers.isEmpty) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen(score, correctAnswers)));
+    }
+
+    int randomIndex = Random().nextInt(numbers.length);
+    int pickedNumber = numbers[randomIndex];
+    numbers.removeAt(randomIndex);
+
+    return pickedNumber;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -213,8 +230,8 @@ class _QuizScreenState extends State<QuizScreen> {
         height: 48,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: isSelected? const Color.fromRGBO(31, 72, 126, 1) : const Color.fromRGBO(117, 117, 117, 1),
+            foregroundColor: isSelected? Colors.white : Colors.black,
+            backgroundColor: isSelected? const Color.fromRGBO(31, 72, 126, 1) : const Color.fromRGBO(117, 117, 117, 50),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
             ),
@@ -231,7 +248,7 @@ class _QuizScreenState extends State<QuizScreen> {
               //next question
               setState(() {
                 selectedAnswer = null;
-                currentQuestionIndex = Random().nextInt(9);
+                currentQuestionIndex = pickRandomNumber();
                 counter++;
               });
             }

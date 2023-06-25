@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});
@@ -9,26 +8,22 @@ class Leaderboard extends StatefulWidget {
 }
 
 class _LeaderboardState extends State<Leaderboard> {
-  List<int> quizScore = [];
+
   int? score;
 
   @override
   void initState() {
     super.initState();
-    getScore();
     setState(() {
       score ??= 0;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    if(quizScore.length < 5) {
-      quizScore.add(score!);
-      quizScore.sort();
-    }
+  Widget build(BuildContext context)
+    {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 250, 250, 255),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,7 +37,7 @@ class _LeaderboardState extends State<Leaderboard> {
                 width: 300.0,
                 height: 56.0,
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(31, 72, 126, 1),
+                  color: Theme.of(context).colorScheme.tertiary,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 alignment: Alignment.center,
@@ -58,16 +53,12 @@ class _LeaderboardState extends State<Leaderboard> {
             ],
           ),
           const SizedBox(height: 24.0),
-          _showScore(quizScore),
         ],
       ),
     );
   }
-
-  void getScore() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    score = pref.getInt("scoreData");
   }
+
 
   _showScore(List<int> quizScore) {
     return const Column(
@@ -111,4 +102,3 @@ class _LeaderboardState extends State<Leaderboard> {
       ],
     );
   }
-}

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:quizr/homescreen.dart';
@@ -14,12 +15,30 @@ class TimedQuizScreen extends StatefulWidget {
 
 class _TimedQuizScreenState extends State<TimedQuizScreen> {
   List<Question> questionList = getQuestions();
+  List<int> numbers = List.generate(10, (index) => index);
   int currentQuestionIndex = 0;
+  int counter = 1;
   int timedScore = 0;
   int timedCorrectAnswers = 0;
   int timedBestScore = 0;
   int timeLeft = 150;
   Answer? selectedAnswer;
+
+  randomPicker() {
+    currentQuestionIndex = pickRandomNumber();
+  }
+
+  int pickRandomNumber() {
+    if (numbers.isEmpty) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => TimedResultScreen(timedScore, timedCorrectAnswers)));
+    }
+
+    int randomIndex = Random().nextInt(numbers.length);
+    int pickedNumber = numbers[randomIndex];
+    numbers.removeAt(randomIndex);
+
+    return pickedNumber;
+  }
 
   @override
   void initState() {
@@ -58,7 +77,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 250, 250, 255),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
         child:
@@ -74,7 +93,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
                     height: 30.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     child: Row(
                       children: [
@@ -162,7 +181,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
   }
 
   _questionWidget() {
-    double percent = ((currentQuestionIndex+1) / questionList.length);
+    double percent = ((counter) / questionList.length);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +197,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
               backgroundColor: const Color.fromRGBO(244, 243, 246, 1),
             ),
             Text(
-              "${currentQuestionIndex + 1} / ${questionList.length}",
+              "$counter / ${questionList.length}",
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Color.fromRGBO(117, 117, 117, 1),
@@ -193,7 +212,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
           height: 628.0,
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -238,7 +257,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           foregroundColor: isSelected ? Colors.white : Colors.black,
-          backgroundColor: isSelected ? const Color.fromRGBO(31, 72, 126, 1) : const Color.fromRGBO(244, 243, 246, 1),
+          backgroundColor: isSelected ? const Color.fromRGBO(31, 72, 126, 1) : Theme.of(context).colorScheme.secondary,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0)
           ),
@@ -270,7 +289,7 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
     if(selectedAnswer != null) {
       isSelected = true;
     }
-    if (currentQuestionIndex == questionList.length - 1) {
+    if (counter == questionList.length) {
       isLastQuestion = true;
     }
 
@@ -299,7 +318,8 @@ class _TimedQuizScreenState extends State<TimedQuizScreen> {
               //next question
               setState(() {
                 selectedAnswer = null;
-                currentQuestionIndex++;
+                counter++;
+                currentQuestionIndex = pickRandomNumber();
               });
             }
           },

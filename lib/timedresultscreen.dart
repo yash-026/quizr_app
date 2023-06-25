@@ -13,6 +13,7 @@ class TimedResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
           const SizedBox(height: 140.0),
@@ -27,11 +28,11 @@ class TimedResultScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24.0),
-          const Text(
+          Text(
             "Results of Quiz",
             style: TextStyle(
               fontSize: 24.0,
-              color: Color.fromRGBO(25, 29, 99, 1),
+              color: Theme.of(context).colorScheme.tertiary,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -41,7 +42,7 @@ class TimedResultScreen extends StatelessWidget {
             height: 72.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(244, 243, 246, 1),
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Row(
@@ -79,7 +80,7 @@ class TimedResultScreen extends StatelessWidget {
             height: 72.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(244, 243, 246, 1),
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Row(
@@ -127,7 +128,7 @@ class TimedResultScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromRGBO(31, 72, 126, 1),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     )
